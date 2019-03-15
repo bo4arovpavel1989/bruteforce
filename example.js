@@ -1,13 +1,10 @@
 const bf = require('./bruteforce');
-const connect = require('./fireconnect')
+const chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 
-bf({
-  chars:[' ', 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
-  step: function (login) {
-    console.log(login);
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve(false), 100)
-    })
-    
-  }
-})
+
+bf({ chars }, stepFunction)
+
+function stepFunction (variant) {
+  console.log(variant)
+  return new Promise((resolve, reject) => setTimeout(resolve, 100))
+}

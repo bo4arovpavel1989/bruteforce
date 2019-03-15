@@ -1,52 +1,45 @@
-module.exports = async function bruteforce (params) {
-  let { chars, step, variant } = params;
-  
-  variant = variant || chars[0];
- 
+/**
+ * Function that combinates all chars from list infinitelly
+ * Stops when step function resolves true
+ * @param {Object} params - options of function
+ * @param {Function} step - takes next string to check as argument and returns Promise
+ * @returns {String/Function} - recursive call or found string
+ */
+
+module.exports = async function bruteforce (params, step) {
+  let { chars, variant } = params;
+
+  variant = variant || '';
+
   const result = step(variant);
-  
+
   if (await result) return variant;
-  
+
   variant = addNextChar(variant, chars);
-  
+
   return bruteforce({
     chars,
-    step, 
     variant
-  })
+  }, step)
 }
 
+/**
+ * Function adds next string in ascending order
+ * @param {String} variant - previous checked string
+ * @param {Array} chars - set of posssible chars
+ * @returns {String/Function} - recursive call or next string
+ */
 function addNextChar (variant, chars) {
-  let numbered = toNumbered(variant, chars);
+  const lastVarChar = variant.charAt(variant.length - 1);
+  const lastPossibleChar = chars[chars.length - 1];
 
-  numbered = numbered + 1;
-  
-  return toStringFromNumbered(numbered, chars);
-}
+  if (lastVarChar === '') return chars[0];
 
-function toNumbered (variant, chars) {
-  const base = chars.length;
-  let reverseVariant = variant.split('').reverse();
-  let result = 0;
+  if (lastVarChar !== lastPossibleChar) {
+    const charIndex = chars.indexOf(lastVarChar);
 
-  reverseVariant.forEach((val, index) => {
-    result += chars.indexOf(val) * (base ** index)
-  })
- 
-  return result;
-}
-
-function toStringFromNumbered (numbered, chars) {
-  let result = '';
-  const base = chars.length;
-  let left = numbered;
-
-  while (left > 0) {
-    const index = left % base;
-    result = chars[index] + result;
-
-    left = Math.floor(left / base)
+    return variant.slice(0, -1) + chars[charIndex + 1];
   }
 
-  return result;
+  return addNextChar(variant.slice(0, -1), chars) + chars[0];
 }
