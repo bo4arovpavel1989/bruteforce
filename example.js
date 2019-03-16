@@ -1,10 +1,15 @@
 const bf = require('./bruteforce');
-const chars = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+const chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
+bf({ chars }, stepFunction).then(console.log)
 
-bf({ chars }, stepFunction)
-
+/**
+ * Function calls to check every generated variant
+ * @param {String} variant - value to be checked
+ * @returns {Promise} representing whether generated variant is correct
+ */
 function stepFunction (variant) {
-  console.log(variant)
-  return new Promise((resolve, reject) => setTimeout(resolve, 100))
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve.bind(null, variant === 'ba'), 0)
+  });
 }
